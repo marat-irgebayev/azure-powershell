@@ -9,26 +9,32 @@ trigger:
 pool:
   name: default
 
+variables:
+  solution: '**/*.sln'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
+
 steps:
-# MSBuild
-# Build with MSBuild
+- task: NuGetToolInstaller@1
+
 - task: NuGetCommand@2
   inputs:
-    command: 'restore'
-    restoreSolution: '**/A*.sln'
-- task: MSBuild@1
+    restoreSolution: '$(solution)'   
+
+- task: VSBuild@1
   inputs:
-    solution: '**/A*.sln' 
-    #msbuildLocationMethod: 'version' # Optional. Options: version, location
-    #msbuildVersion: 'latest' # Optional. Options: latest, 16.0, 15.0, 14.0, 12.0, 4.0
-    #msbuildArchitecture: 'x86' # Optional. Options: x86, x64
-    #msbuildLocation: # Optional
-    #platform: # Optional
-    #configuration: # Optional
-    #msbuildArguments: # Optional
-    #clean: false # Optional
-    #maximumCpuCount: false # Optional
-    #restoreNugetPackages: false # Optional
-    #logProjectEvents: false # Optional
-    #createLogFile: false # Optional
-    #logFileVerbosity: 'normal' # Optional. Options: quiet, minimal, normal, detailed, diagnostic
+    solution: '$(solution)'
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
+    clean: true
+
+- task: VSTest@2
+  inputs:
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
