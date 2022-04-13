@@ -1,0 +1,34 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- main
+
+pool:
+  name: default
+
+steps:
+# MSBuild
+# Build with MSBuild
+- task: NuGetCommand@2
+  inputs:
+    command: 'restore'
+    restoreSolution: '**/A*.sln'
+- task: MSBuild@1
+  inputs:
+    solution: '**/A*.sln' 
+    #msbuildLocationMethod: 'version' # Optional. Options: version, location
+    #msbuildVersion: 'latest' # Optional. Options: latest, 16.0, 15.0, 14.0, 12.0, 4.0
+    #msbuildArchitecture: 'x86' # Optional. Options: x86, x64
+    #msbuildLocation: # Optional
+    #platform: # Optional
+    #configuration: # Optional
+    #msbuildArguments: # Optional
+    #clean: false # Optional
+    #maximumCpuCount: false # Optional
+    #restoreNugetPackages: false # Optional
+    #logProjectEvents: false # Optional
+    #createLogFile: false # Optional
+    #logFileVerbosity: 'normal' # Optional. Options: quiet, minimal, normal, detailed, diagnostic
